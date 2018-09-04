@@ -1,0 +1,33 @@
+{
+  "name": "authorize-access",
+  "version": "0.0.0-alpha.0",
+  "description": "Javascript library which authorizes access based on pipeline of plugable async stages",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisdostert/authorize-access-js.git"
+  },
+  "keywords": [
+    "access-control"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chrisdostert/authorize-access-js/issues"
+  },
+  "homepage": "https://github.com/chrisdostert/authorize-access-js#readme",
+  "standard": {
+    "envs": [
+      "jest"
+    ]
+  },
+  "devDependencies": {
+    "jest": "^23.2.0",
+    "standard": "^11.0.1"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.3.0"
+  }
+}
