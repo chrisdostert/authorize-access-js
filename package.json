@@ -1,6 +1,6 @@
 {
   "name": "authorize-access",
-  "version": "0.0.0-alpha.0",
+  "version": "0.0.0-alpha.8",
   "description": "Javascript library which authorizes access based on pipeline of plugable async stages",
   "main": "index.js",
   "scripts": {

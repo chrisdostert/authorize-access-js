@@ -1,7 +1,3 @@
-const deny = error => {
-  throw error || new Error('not authorized')
-}
-
 async function authorize (
   request,
   stages
@@ -11,11 +7,19 @@ async function authorize (
     let isGranted
     let grant = () => { isGranted = true }
 
-    accessCtx = await stages[i]({...accessCtx, deny, grant}, request)
+    const result = await stages[i]({...accessCtx, grant}, request)
+    if (result instanceof Object) {
+      accessCtx = {...accessCtx, ...result}
+    }
     if (isGranted) {
       return accessCtx
     }
   }
+
+  // if not granted by any stage then deny
+  const error = new Error()
+  error.code = 403
+  throw error
 }
 
 module.exports = authorize

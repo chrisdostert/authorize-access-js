@@ -16,15 +16,15 @@ Authorization logic typically differs between calls.
 In a codebase of reasonable size, this can result in considerable LOC, much of which is similar or repeated.
 
 ## Solution
-Create a library which authorizes access by processing a pipeline of plugable async stages.
+Create a library which authorizes access by processing a pipeline of plugable async stages a.k.a middleware.
 
-Each stage:
+Each middlware is called in order &:
   - receives the most recently returned accessCtx or the default accessCtx object, along w/ the original request
   - can return an updated accessCtx
-  - can throw to end further pipeline stages being called & deny access
-  - can call accessCtx.grant() to end further pipeline stages being called & grant access
+  - can throw to skip all other middleware & deny access
+  - can call accessCtx.grant() to skip all other middleware & grant access
 
-If no stages call accessCtx.grant(), an error will be thrown. 
+If no stages call accessCtx.grant(), an error will be thrown.
 
 In this way the boilerplate code goes away & only the authorization rules remain, defined in a standard/re-useable way. 
 
@@ -42,25 +42,21 @@ yarn add authorize-access
 
 # Examples
 
-# Basic usage
-
 ```javascript
-// define your stages in some common location
-const jsonWebToken = require('jsonwebtoken')
-const jwtStage = (accessCtx, request) => jsonWebToken.verify(request.accessToken, 'XXXX' {algorithms: ['HS256']})
-
-const userIdStage = (accessCtx, request) => {
-  if (accessCtx.userId === request.userId) {
-    accessCtx.grant()
-  }
-}
-
-// then, for some incomming request you want to authorize access for...
+// for some business logic you want to authorize access to...
 const authorizeAccess = require('authorize-access')
+const jsonWebToken = require('jsonwebtoken')
 
 const accessCtx = await authorizeAccess(
   {userId: 'XXX'},
-  [jwtStage, userIdStage]
+  [
+    // You should put middleware in some common location & re-use it; inlined here for demo purposes
+    // 
+    // middleware to verify JWT
+    (accessCtx, request) => jsonWebToken.verify(request.accessToken, 'XXXX' {algorithms: ['HS256']}),
+    // middleware to verify request is from auth'd user
+    (accessCtx, request) => (accessCtx.userId === request.userId) && accessCtx.grant()
+  ]
 )
 
 // either accessCtx of granted access or error thrown
