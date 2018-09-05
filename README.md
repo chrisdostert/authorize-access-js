@@ -13,10 +13,12 @@ Javascript library which authorizes access based on pipeline of plugable async s
 ## Problem
 Authorization logic typically differs between calls. 
 
-In a codebase of reasonable size, this can result in considerable LOC, much of which is similar or repeated.
+In a codebase of reasonable size/complexity, this results in
+  - bloat due to boilerplate/repeated code
+  - hard to follow logic due to lack of standardization
 
 ## Solution
-Create a library which authorizes access by processing a pipeline of plugable async stages a.k.a middleware.
+Authorize access via a standardized processing pipeline of plugable async stages a.k.a middleware.
 
 Each middlware is called in order &:
   - receives the most recently returned accessCtx or the default accessCtx object, along w/ the original request
